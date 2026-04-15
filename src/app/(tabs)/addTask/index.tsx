@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: colors.backgroud,
     gap: 34,
-    // paddingBottom: 60,
+    paddingBottom: 80,
     // borderWidth: 2,
   },
   dateContainer: {

@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { PlatformPressable } from "@react-navigation/elements";
 import { useLinkBuilder } from "@react-navigation/native";
 import { StyleSheet, Text, View } from "react-native";
@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from "react-native";
 const ICONS: Record<string, string> = {
   "tasks/index": "check-square",
   "timer/index": "clock",
-  "notes/index": "file-text",
+  "notes/index": "user-circle",
   "addTask/index": "plus",
 };
 
@@ -58,9 +58,13 @@ export const TabBar = ({
           accessibilityState={isFocused ? { selected: true } : {}}
           onPress={onPress}
           onLongPress={onLongPress}
-          style={styles.tabbarItem}
+          style={[styles.tabbarItem]}
         >
-          <Feather name={iconName as any} size={35} color="#FF6B00" />
+          <FontAwesome6
+            name={iconName as any}
+            size={30}
+            color={isFocused ? "#fff" : "#FF6B00"}
+          />
         </PlatformPressable>
       );
     }
@@ -80,17 +84,20 @@ export const TabBar = ({
         onLongPress={onLongPress}
         style={[
           styles.tabbarItem,
-          // isFocused && styles.tabbarItemFocused,   // dark bg when focused
+          isFocused && styles.tabbarItemFocused,   // dark bg when focused
         ]}
       >
-        <Feather name={iconName as any} size={isFocused? 30 : 20} color={iconColor} />
-      {!isFocused &&  <Text style={[styles.label, { color: labelColor }]}>{label}</Text>}
+        <FontAwesome6 name={iconName as any} size={24} color={iconColor} />
+        {/* {!isFocused && ( */}
+          <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
+        {/* // )} */}
       </PlatformPressable>
     );
   };
 
   return (
     <View style={styles.container}>
+
       {/* First 3 — white pill */}
       <View style={styles.groupPill}>
         {groupedRoutes.map((route: any, index: number) =>
@@ -114,29 +121,32 @@ const styles = StyleSheet.create({
     right: 20,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
+    justifyContent: "center",
+    gap: 8,
+
   },
+
   groupPill: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    backgroundColor: "#FFFFFF", // white pill
-    borderRadius: 40,
+    backgroundColor: "#e5e5e5", // white pill
+    borderRadius: 25,
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 6,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 10,
+    maxWidth:330,
   },
   lastPill: {
     backgroundColor: "#1C1C1C", // black pill
     borderRadius: 40,
     paddingVertical: 8,
-    paddingHorizontal: 20,
+    paddingHorizontal: 8,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -148,17 +158,20 @@ const styles = StyleSheet.create({
   tabbarItem: {
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 20,
-    gap: 4,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
+    gap: 6,
+    flexDirection:"row",
   },
-  // tabbarItemFocused: {
-  //   backgroundColor: "#F0F0F0",
-  //   color:"red"
-  // },
+  tabbarItemFocused: {
+    backgroundColor: "#fff",
+    paddingVertical:10,
+    // paddingHorizontal:8,
+    borderRadius:20
+  },
   label: {
-    fontSize: 10,
-    fontWeight: "500",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

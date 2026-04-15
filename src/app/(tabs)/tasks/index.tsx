@@ -1,17 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import TaskOverview from "@/components/overview";
+import { colors } from "@/constants/defaultBasics";
+import React from "react";
+import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Tasks = () => {
   return (
-    <SafeAreaView edges={["top","bottom"]}>
-    <View>
-      <Text >Tasks</Text>
-    </View>
+    <SafeAreaView edges={["top", "bottom"]} style={styles.container}>
+      <TaskOverview />
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Tasks
+export default Tasks;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.backgroud,
+    flex: 1,
+  },
+});
