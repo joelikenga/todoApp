@@ -1,4 +1,5 @@
 import { colors } from "@/constants/defaultBasics";
+import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useMemo, useRef, useState } from "react";
 import {
   Dimensions,
@@ -42,9 +43,9 @@ const generateDateList = () => {
 };
 
 const TABS = [
-  { name: "todo", icon: "" },
-  { name: "completed", icon: "" },
-  { name: "pending", icon: "" },
+  { name: "todo", icon: "spinner" },
+  { name: "completed", icon: "check" },
+  { name: "pending", icon: "clock" },
 ];
 
 const TaskOverview = () => {
@@ -65,6 +66,14 @@ const TaskOverview = () => {
     const offsetX = e.nativeEvent.contentOffset.x;
     const index = Math.round(offsetX / ITEM_WIDTH);
     setCurrentIndex(index);
+  };
+
+  // tabSelection
+
+  const [tabName, setTabName] = useState<string>("todo");
+
+  const tabSelection = (tabName: string) => {
+    setTabName(tabName);
   };
 
   return (
@@ -120,14 +129,31 @@ const TaskOverview = () => {
       {/* Check list */}
       <View style={styles.checkListContainer}>
         <View style={styles.checkListTab}>
-          {TABS.map((tabItem, index) => (
-            <View key={index} style={styles.tabsContainer}>
-              <TouchableOpacity style={styles.tab}>
-                <Text>{tabItem.icon}</Text>
-                <Text>{tabItem.name}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+          {TABS.map((tabItem, index) => {
+            const isActiveTab = tabName === tabItem.name;
+            return (
+              <View key={index} style={styles.tabsContainer}>
+                <TouchableOpacity
+                  onPress={() => tabSelection(tabItem.name)}
+                  style={[
+                    styles.tab,
+                    isActiveTab && { backgroundColor: "#000" },
+                  ]}
+                >
+                  <FontAwesome6
+                    name={tabItem.icon}
+                    size={20}
+                    color={isActiveTab ? "#fff" : "#000"}
+                  />
+                  <Text
+                    style={[styles.tabText,   { color: isActiveTab ? "#fff" : "#000" }]}
+                  >
+                    {tabItem.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
         </View>
       </View>
     </View>
@@ -207,19 +233,25 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     flexDirection: "row",
     alignItems: "center",
-    // gap: 2,
+    padding: 8,
+    gap: 4,
   },
   tabsContainer: {
     flex: 1,
-    padding:8
   },
   tab: {
     borderRadius: 10,
-    borderWidth: 1,
+    // borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection:"row",
+    flexDirection: "row",
     paddingVertical: 8,
     paddingHorizontal: 5,
+    gap: 5,
+  },
+  tabText: {
+    fontSize: 16,
+    color: colors.mediumGray,
+    fontWeight: "500",
   },
 });
