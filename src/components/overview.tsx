@@ -1,11 +1,12 @@
 import { colors } from "@/constants/defaultBasics";
 import { FontAwesome6 } from "@expo/vector-icons";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -14,17 +15,29 @@ import {
 
 const { width } = Dimensions.get("window");
 const ITEM_WIDTH = 60;
-const FLATLIST_WIDTH = width - 48; // screen - container padding (32) - wrapper padding (16)
+const FLATLIST_WIDTH = width - 48;
 
-const generateDateList = () => {
-  const dates = [];
+// --- Types ---
+type DateItem = {
+  id: string;
+  day: string;
+  date: string;
+  isToday: boolean;
+};
+
+type TabItem = {
+  name: string;
+  icon: string;
+};
+
+// --- Helpers ---
+const generateDateList = (): DateItem[] => {
+  const dates: DateItem[] = [];
   const today = new Date();
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
 
-  // Get the first day of the current month
   const firstDay = new Date(currentYear, currentMonth, 1);
-  // Get the last day of the current month
   const lastDay = new Date(currentYear, currentMonth + 1, 0);
 
   for (let d = firstDay.getDate(); d <= lastDay.getDate(); d++) {
@@ -42,46 +55,142 @@ const generateDateList = () => {
   return dates;
 };
 
-const TABS = [
-  { name: "todo", icon: "spinner" },
+const TABS: TabItem[] = [
+  { name: "Todo", icon: "spinner" },
   { name: "completed", icon: "check" },
   { name: "pending", icon: "clock" },
 ];
 
+// --- Memoized Sub-components ---
+const DateItemComponent = React.memo(
+  ({
+    item,
+    isActive,
+    onPress,
+    index,
+  }: {
+    item: DateItem;
+    isActive: boolean;
+    onPress: (index: number) => void;
+    index: number;
+  }) => {
+    const handlePress = useCallback(() => onPress(index), [index, onPress]);
+
+    return (
+      <TouchableOpacity
+        onPress={handlePress}
+        style={[styles.item, isActive && styles.activeItem]}
+      >
+        <Text style={[styles.day, item.isToday && styles.todayText]}>
+          {item.day}
+        </Text>
+        <Text style={[styles.date, item.isToday && styles.todayText]}>
+          {item.date}
+        </Text>
+      </TouchableOpacity>
+    );
+  },
+);
+
+const TabItemComponent = React.memo(
+  ({
+    tab,
+    isActive,
+    onPress,
+  }: {
+    tab: TabItem;
+    isActive: boolean;
+    onPress: (name: string) => void;
+  }) => {
+    const handlePress = useCallback(
+      () => onPress(tab.name),
+      [tab.name, onPress],
+    );
+
+    return (
+      <View style={styles.tabsContainer}>
+        <TouchableOpacity
+          onPress={handlePress}
+          style={[styles.tab, isActive && { backgroundColor: "#000" }]}
+        >
+          <FontAwesome6
+            name={tab.icon}
+            size={20}
+            color={isActive ? "#fff" : "#000"}
+          />
+          <Text style={[styles.tabText, { color: isActive ? "#fff" : "#000" }]}>
+            {tab.name}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  },
+);
+
+// --- Main Component ---
 const TaskOverview = () => {
   const flatListRef = useRef<FlatList>(null);
   const data = useMemo(() => generateDateList(), []);
 
-  const todayIndex = data.findIndex((d) => d.isToday);
+  const todayIndex = useMemo(() => data.findIndex((d) => d.isToday), [data]);
   const [currentIndex, setCurrentIndex] = useState(todayIndex);
+  const [tabName, setTabName] = useState<string>("Todo");
 
-  const handlePress = (index: number) => {
+  const handleDatePress = useCallback((index: number) => {
     setCurrentIndex(index);
-    const offset = index * ITEM_WIDTH;
-    flatListRef.current?.scrollToOffset({ offset, animated: true });
-  };
+    flatListRef.current?.scrollToOffset({
+      offset: index * ITEM_WIDTH,
+      animated: true,
+    });
+  }, []);
 
-  // Snap detection
-  const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetX = e.nativeEvent.contentOffset.x;
-    const index = Math.round(offsetX / ITEM_WIDTH);
-    setCurrentIndex(index);
-  };
+  const handleTabPress = useCallback((name: string) => {
+    setTabName(name);
+  }, []);
 
-  // tabSelection
+  const onScrollEnd = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const offsetX = e.nativeEvent.contentOffset.x;
+      const index = Math.round(offsetX / ITEM_WIDTH);
+      setCurrentIndex(index);
+    },
+    [],
+  );
 
-  const [tabName, setTabName] = useState<string>("todo");
+  const renderDateItem = useCallback(
+    ({ item, index }: { item: DateItem; index: number }) => (
+      <DateItemComponent
+        item={item}
+        index={index}
+        isActive={index === currentIndex}
+        onPress={handleDatePress}
+      />
+    ),
+    [currentIndex, handleDatePress],
+  );
 
-  const tabSelection = (tabName: string) => {
-    setTabName(tabName);
-  };
+  const keyExtractor = useCallback((item: DateItem) => item.id, []);
+
+  const getItemLayout = useCallback(
+    (_: ArrayLike<DateItem> | null | undefined, index: number) => ({
+      length: ITEM_WIDTH,
+      offset: ITEM_WIDTH * index,
+      index,
+    }),
+    [],
+  );
+
+  const contentContainerStyle = useMemo(
+    () => ({ paddingHorizontal: (FLATLIST_WIDTH - ITEM_WIDTH) / 2 }),
+    [],
+  );
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View>
         <Text style={styles.greet}>Hey, Joel</Text>
-        <Text style={styles.sub}>Let’s make progress today!</Text>
+        <Text style={styles.sub}>Let's make progress today!</Text>
       </View>
 
       {/* Date Picker */}
@@ -90,7 +199,7 @@ const TaskOverview = () => {
           ref={flatListRef}
           horizontal
           data={data}
-          keyExtractor={(item) => item.id}
+          keyExtractor={keyExtractor}
           showsHorizontalScrollIndicator={false}
           bounces={false}
           overScrollMode="never"
@@ -98,64 +207,32 @@ const TaskOverview = () => {
           decelerationRate="fast"
           onMomentumScrollEnd={onScrollEnd}
           initialScrollIndex={todayIndex}
-          getItemLayout={(_, index) => ({
-            length: ITEM_WIDTH,
-            offset: ITEM_WIDTH * index,
-            index,
-          })}
-          contentContainerStyle={{
-            paddingHorizontal: (FLATLIST_WIDTH - ITEM_WIDTH) / 2,
-          }}
-          renderItem={({ item, index }) => {
-            const isActive = index === currentIndex;
-
-            return (
-              <TouchableOpacity
-                onPress={() => handlePress(index)}
-                style={[styles.item, isActive && styles.activeItem]}
-              >
-                <Text style={[styles.day, item.isToday && styles.todayText]}>
-                  {item.day}
-                </Text>
-
-                <Text style={[styles.date, item.isToday && styles.todayText]}>
-                  {item.date}
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
+          getItemLayout={getItemLayout}
+          contentContainerStyle={contentContainerStyle}
+          renderItem={renderDateItem}
         />
       </View>
-      {/* Check list */}
+
+      {/* Tab Bar */}
       <View style={styles.checkListContainer}>
         <View style={styles.checkListTab}>
-          {TABS.map((tabItem, index) => {
-            const isActiveTab = tabName === tabItem.name;
-            return (
-              <View key={index} style={styles.tabsContainer}>
-                <TouchableOpacity
-                  onPress={() => tabSelection(tabItem.name)}
-                  style={[
-                    styles.tab,
-                    isActiveTab && { backgroundColor: "#000" },
-                  ]}
-                >
-                  <FontAwesome6
-                    name={tabItem.icon}
-                    size={20}
-                    color={isActiveTab ? "#fff" : "#000"}
-                  />
-                  <Text
-                    style={[styles.tabText,   { color: isActiveTab ? "#fff" : "#000" }]}
-                  >
-                    {tabItem.name}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+          {TABS.map((tabItem) => (
+            <TabItemComponent
+              key={tabItem.name}
+              tab={tabItem}
+              isActive={tabName === tabItem.name}
+              onPress={handleTabPress}
+            />
+          ))}
         </View>
       </View>
+
+      {/* Tasks */}
+      <ScrollView style={styles.taskContainer} >
+          <View style={styles.task}>
+              <CheckBox 
+          </View>
+      </ScrollView>
     </View>
   );
 };
@@ -169,19 +246,16 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
     gap: 15,
   },
-
   greet: {
     fontSize: 24,
     fontWeight: "600",
   },
-
   sub: {
     fontSize: 20,
     color: "#666",
     marginTop: 4,
     fontFamily: "cursive",
   },
-
   wrapper: {
     paddingVertical: 15,
     paddingHorizontal: 8,
@@ -189,39 +263,33 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 20,
     alignItems: "center",
-    // borderWidth: 2,
   },
-
   item: {
     width: ITEM_WIDTH,
     height: 70,
     alignItems: "center",
     justifyContent: "center",
-    // borderWidth: 2,
+    zIndex: 1,
   },
-
   activeItem: {
     borderColor: colors.orange,
-    borderWidth: 2,
     borderRadius: 10,
+    backgroundColor: colors.lighterGray,
   },
-
   day: {
     fontSize: 16,
-    color: "#999",
+    color: colors.nearBlack,
     marginBottom: 4,
+    zIndex: 2,
   },
-
   date: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#333",
+    color: colors.black,
   },
-
   todayText: {
     color: colors.orange,
   },
-
   checkListContainer: {
     backgroundColor: "#fff",
     borderRadius: 20,
@@ -241,17 +309,17 @@ const styles = StyleSheet.create({
   },
   tab: {
     borderRadius: 10,
-    // borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 5,
-    gap: 5,
+    gap: 6,
   },
   tabText: {
     fontSize: 16,
     color: colors.mediumGray,
     fontWeight: "500",
+    textTransform: "capitalize",
   },
 });
