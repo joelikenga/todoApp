@@ -1,4 +1,5 @@
-import { colors } from "@/constants/defaultBasics";
+import { colors } from "@/utils/defaultBasics";
+import { fontSize } from "@/utils/scale";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
@@ -12,8 +13,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import CheckBoxComponent from "./checkBoxComponent";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const ITEM_WIDTH = 60;
 const FLATLIST_WIDTH = width - 48;
 
@@ -189,7 +191,7 @@ const TaskOverview = () => {
     <View style={styles.container}>
       {/* Header */}
       <View>
-        <Text style={styles.greet}>Hey, Joel</Text>
+        <Text style={styles.greet}>Hello</Text>
         <Text style={styles.sub}>Let's make progress today!</Text>
       </View>
 
@@ -213,8 +215,9 @@ const TaskOverview = () => {
         />
       </View>
 
-      {/* Tab Bar */}
       <View style={styles.checkListContainer}>
+        {/* Tab Bar */}
+
         <View style={styles.checkListTab}>
           {TABS.map((tabItem) => (
             <TabItemComponent
@@ -225,14 +228,26 @@ const TaskOverview = () => {
             />
           ))}
         </View>
-      </View>
 
-      {/* Tasks */}
-      <ScrollView style={styles.taskContainer} >
-          <View style={styles.task}>
-              <CheckBox 
+        {/* Tasks */}
+        <ScrollView>
+          <Text style={styles.taskDay}>Today</Text>
+
+          <View style={styles.taskContainer}>
+            <View style={styles.task}>
+              <CheckBoxComponent
+                checked={true}
+                color={colors.orange}
+                size={24}
+                onPress={() => {}}
+              />
+              <Text className="text-amber-300 font-semibold" >
+                😒 Gym and lift
+              </Text>
+            </View>
           </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -241,17 +256,17 @@ export default TaskOverview;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
+    paddingTop: 10,
     paddingHorizontal: 16,
     paddingBottom: 80,
     gap: 15,
   },
   greet: {
-    fontSize: 24,
-    fontWeight: "600",
+    fontSize: 70,
+    fontWeight: "900",
   },
   sub: {
-    fontSize: 20,
+    fontSize: 24,
     color: "#666",
     marginTop: 4,
     fontFamily: "cursive",
@@ -293,8 +308,9 @@ const styles = StyleSheet.create({
   checkListContainer: {
     backgroundColor: "#fff",
     borderRadius: 20,
-    maxHeight: 580,
+    height: height * 0.56,
     padding: 20,
+    gap: 16,
   },
   checkListTab: {
     backgroundColor: "#e5e5e5",
@@ -317,9 +333,28 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   tabText: {
-    fontSize: 16,
+    fontSize: fontSize.md,
     color: colors.mediumGray,
     fontWeight: "500",
     textTransform: "capitalize",
+  },
+  taskContainer: {
+    gap: 12,
+  },
+  taskDay: {
+    fontSize: 18,
+    fontWeight: "500",
+    paddingBottom: 20,
+  },
+  task: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    gap: 6,
+    // borderWidth: 1,
+  },
+  taskText: {
+    fontSize: fontSize.md,
+    fontWeight: "400",
   },
 });

@@ -8,10 +8,10 @@ const TabsLayout = () => {
       screenOptions={{ headerShown: false }}
       tabBar={(props) => <TabBar {...props} />}
     >
-      <Tabs.Screen name="tasks/index" options={{ title: "Tasks" }} />
-      <Tabs.Screen name="timer/index" options={{ title: "Timer" }} />
-      <Tabs.Screen name="notes/index" options={{ title: "Notes" }} />
-      <Tabs.Screen name="addTask/index" options={{ title: "Add" }} />
+      <Tabs.Screen name="index" options={{ title: "Tasks" }} />
+      <Tabs.Screen name="timer" options={{ title: "Timer" }} />
+      <Tabs.Screen name="notes" options={{ title: "Notes" }} />
+      <Tabs.Screen name="addTask" options={{ title: "Add" }} />
     </Tabs>
   );
 };

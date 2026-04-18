@@ -1,12 +1,12 @@
-import { colors } from "@/constants/defaultBasics";
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors } from "@/utils/defaultBasics";
 import { useRoute } from "@react-navigation/native";
 import { router } from "expo-router";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const DAYS_OF_WEEK = ["M", "T", "W", "T", "F", "S", "S"];
 function getDaysInMonth(year: number, month: number) {
-  const router = useRoute()
+  const router = useRoute();
   const today = new Date();
   const firstDay = new Date(year, month, 1).getDay(); // 0 = Sunday
   const totalDays = new Date(year, month + 1, 0).getDate(); // total days in month
@@ -68,7 +68,12 @@ function DayCircle({ state, day }: { state: string; day: string }) {
         : colors.mediumGray;
 
   return (
-    <TouchableOpacity onPress={()=>{router.push(`/screens/addTask`)}}  style={[styles.circle, { backgroundColor: bgColor }]}>
+    <TouchableOpacity
+      onPress={() => {
+        router.push(`/screens/addTask`);
+      }}
+      style={[styles.circle, { backgroundColor: bgColor }]}
+    >
       <Text style={[{ color: textColor, fontSize: 20 }]}>{day}</Text>
     </TouchableOpacity>
   );

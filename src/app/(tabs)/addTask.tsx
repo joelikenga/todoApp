@@ -1,5 +1,5 @@
 import CalendarComponent from "@/components/calendarComponent";
-import { colors } from "@/constants/defaultBasics";
+import { colors } from "@/utils/defaultBasics";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
