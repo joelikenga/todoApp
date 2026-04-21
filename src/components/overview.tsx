@@ -117,7 +117,7 @@ const TabItemComponent = React.memo(
         >
           <FontAwesome6
             name={tab.icon}
-            size={20}
+            size={16}
             color={isActive ? "#fff" : "#000"}
           />
           <Text style={[styles.tabText, { color: isActive ? "#fff" : "#000" }]}>
@@ -241,7 +241,7 @@ const TaskOverview = () => {
                 size={24}
                 onPress={() => {}}
               />
-              <Text className="text-amber-300 font-semibold" >
+              <Text className="text-[#d400ff] font-semibold">
                 😒 Gym and lift
               </Text>
             </View>
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
-    gap: 4,
+    padding: 6,
+    gap: 2,
   },
   tabsContainer: {
     flex: 1,
@@ -329,7 +329,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     paddingVertical: 10,
-    paddingHorizontal: 5,
+    paddingHorizontal: 4,
+    overflow:"hidden",
     gap: 6,
   },
   tabText: {
@@ -337,6 +338,7 @@ const styles = StyleSheet.create({
     color: colors.mediumGray,
     fontWeight: "500",
     textTransform: "capitalize",
+    flexShrink:1
   },
   taskContainer: {
     gap: 12,

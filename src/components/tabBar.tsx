@@ -4,10 +4,10 @@ import { useLinkBuilder } from "@react-navigation/native";
 import { StyleSheet, Text, View } from "react-native";
 
 const ICONS: Record<string, string> = {
-  "tasks/index": "check-square",
-  "timer/index": "clock",
-  "notes/index": "user-circle",
-  "addTask/index": "plus",
+  "index": "check-square",
+  "timer": "clock",
+  "notes": "user-circle",
+  "addTask": "plus",
 };
 
 export const TabBar = ({
@@ -62,7 +62,7 @@ export const TabBar = ({
         >
           <FontAwesome6
             name={iconName as any}
-            size={30}
+            size={26}
             color={isFocused ? "#fff" : "#FF6B00"}
           />
         </PlatformPressable>
@@ -84,12 +84,12 @@ export const TabBar = ({
         onLongPress={onLongPress}
         style={[
           styles.tabbarItem,
-          isFocused && styles.tabbarItemFocused,   // dark bg when focused
+          isFocused && styles.tabbarItemFocused,
         ]}
       >
-        <FontAwesome6 name={iconName as any} size={24} color={iconColor} />
+        <FontAwesome6 name={iconName as any} size={20} color={iconColor} />
         {/* {!isFocused && ( */}
-          <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
+        <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
         {/* // )} */}
       </PlatformPressable>
     );
@@ -97,7 +97,6 @@ export const TabBar = ({
 
   return (
     <View style={styles.container}>
-
       {/* First 3 — white pill */}
       <View style={styles.groupPill}>
         {groupedRoutes.map((route: any, index: number) =>
@@ -123,7 +122,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-
   },
 
   groupPill: {
@@ -131,22 +129,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    backgroundColor: "#e5e5e5", // white pill
-    borderRadius: 25,
+    backgroundColor: "#e5e5e5", 
+    borderRadius: 16,
     paddingVertical: 8,
-    paddingHorizontal: 6,
+    paddingHorizontal: 1,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 10,
-    maxWidth:330,
+    maxWidth: 330,
   },
   lastPill: {
-    backgroundColor: "#1C1C1C", // black pill
-    borderRadius: 40,
-    paddingVertical: 8,
-    paddingHorizontal: 8,
+    backgroundColor: "#1C1C1C",
+    borderRadius: 16,
+    paddingVertical: 4,
+    paddingHorizontal: 4,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -162,13 +160,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 16,
     gap: 6,
-    flexDirection:"row",
+    flexDirection: "row",
   },
   tabbarItemFocused: {
     backgroundColor: "#fff",
-    paddingVertical:10,
+    paddingVertical: 10,
     // paddingHorizontal:8,
-    borderRadius:20
+    borderRadius: 14,
   },
   label: {
     fontSize: 16,

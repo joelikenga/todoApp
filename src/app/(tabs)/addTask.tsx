@@ -17,7 +17,7 @@ export default function AddTask() {
       edges={["top", "bottom", "left", "right"]}
       style={{ flex: 1 }}
     >
-      <View style={styles.container}>
+      <View className="flex-1 " style={styles.container}>
         <View style={styles.dateContainer}>
           <Text style={styles.dayText}>{dateNumber}</Text>
           <View style={styles.dateYearContainer}>
@@ -38,7 +38,7 @@ export default function AddTask() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
     paddingHorizontal: 16,
