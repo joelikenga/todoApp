@@ -4,10 +4,10 @@ import { useLinkBuilder } from "@react-navigation/native";
 import { StyleSheet, Text, View } from "react-native";
 
 const ICONS: Record<string, string> = {
-  "index": "check-square",
-  "timer": "clock",
-  "notes": "user-circle",
-  "addTask": "plus",
+  index: "check-square",
+  timer: "clock",
+  notes: "user-circle",
+  addTask: "plus",
 };
 
 export const TabBar = ({
@@ -62,7 +62,7 @@ export const TabBar = ({
         >
           <FontAwesome6
             name={iconName as any}
-            size={26}
+            size={20}
             color={isFocused ? "#fff" : "#FF6B00"}
           />
         </PlatformPressable>
@@ -82,10 +82,7 @@ export const TabBar = ({
         testID={options.tabBarButtonTestID}
         onPress={onPress}
         onLongPress={onLongPress}
-        style={[
-          styles.tabbarItem,
-          isFocused && styles.tabbarItemFocused,
-        ]}
+        style={[styles.tabbarItem, isFocused && styles.tabbarItemFocused]}
       >
         <FontAwesome6 name={iconName as any} size={20} color={iconColor} />
         {/* {!isFocused && ( */}
@@ -129,22 +126,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    backgroundColor: "#e5e5e5", 
+    backgroundColor: "#e5e5e5",
     borderRadius: 16,
     paddingVertical: 8,
-    paddingHorizontal: 1,
+    paddingHorizontal: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 10,
-    maxWidth: 330,
   },
+
   lastPill: {
     backgroundColor: "#1C1C1C",
     borderRadius: 16,
-    paddingVertical: 4,
-    paddingHorizontal: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -153,23 +150,28 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 10,
   },
+
   tabbarItem: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
     borderRadius: 16,
-    gap: 6,
+    gap: 4,
     flexDirection: "row",
+    minWidth: 0,
   },
+
   tabbarItemFocused: {
     backgroundColor: "#fff",
-    paddingVertical: 10,
-    // paddingHorizontal:8,
+    paddingVertical: 12,
     borderRadius: 14,
   },
+
   label: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "600",
+    flexShrink: 1,
   },
 });

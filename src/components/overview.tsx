@@ -230,21 +230,51 @@ const TaskOverview = () => {
         </View>
 
         {/* Tasks */}
-        <ScrollView>
-          <Text style={styles.taskDay}>Today</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View className="gap-2">
+            {[1, 2, 3, 4, 5].map((_, index) => (
+              <View key={index} className="py-2 gap-4">
+                <View className=" flex-row gap-3 items-center">
+                  <FontAwesome6 name="chevron-up" size={18} />
+                  <Text className="text-xl font-semibold">Morning Waka</Text>
+                </View>
+                {
+                  <View className="ml-6 gap-4">
+                    <View style={styles.task}>
+                      <CheckBoxComponent
+                        checked={false}
+                        color={colors.orange}
+                        size={24}
+                        onPress={() => {}}
+                      />
+                      <Text className=" text-xl font-medium">Prayers</Text>
+                    </View>
 
-          <View style={styles.taskContainer}>
-            <View style={styles.task}>
-              <CheckBoxComponent
-                checked={true}
-                color={colors.orange}
-                size={24}
-                onPress={() => {}}
-              />
-              <Text className="text-[#d400ff] font-semibold">
-                😒 Gym and lift
-              </Text>
-            </View>
+                    <View style={styles.task}>
+                      <CheckBoxComponent
+                        checked={true}
+                        color={colors.orange}
+                        size={24}
+                        onPress={() => {}}
+                      />
+                      <Text className=" text-xl font-medium">
+                        😒 Gym and lift
+                      </Text>
+                    </View>
+
+                    <View style={styles.task}>
+                      <CheckBoxComponent
+                        checked={false}
+                        color={colors.orange}
+                        size={24}
+                        onPress={() => {}}
+                      />
+                      <Text className=" text-xl font-medium">Gym and lift</Text>
+                    </View>
+                  </View>
+                }
+              </View>
+            ))}
           </View>
         </ScrollView>
       </View>
@@ -330,7 +360,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingVertical: 10,
     paddingHorizontal: 4,
-    overflow:"hidden",
+    overflow: "hidden",
     gap: 6,
   },
   tabText: {
@@ -338,21 +368,17 @@ const styles = StyleSheet.create({
     color: colors.mediumGray,
     fontWeight: "500",
     textTransform: "capitalize",
-    flexShrink:1
+    flexShrink: 1,
   },
   taskContainer: {
     gap: 12,
   },
-  taskDay: {
-    fontSize: 18,
-    fontWeight: "500",
-    paddingBottom: 20,
-  },
+
   task: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    gap: 6,
+    gap: 8,
     // borderWidth: 1,
   },
   taskText: {
